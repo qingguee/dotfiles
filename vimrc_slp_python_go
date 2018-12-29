@@ -1,0 +1,287 @@
+" Specify a directory for plugins
+" - For Neovim: ~/.local/share/nvim/plugged
+" - Avoid using standard Vim directory names like 'plugin'
+" call plug#begin('~/.vim/plugged')
+call plug#begin('~/.local/share/nvim/plugged')
+
+" Make sure you use single quotes
+Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
+" Shorthand notation; fetches https://github.com/junegunn/vim-easy-align
+Plug 'junegunn/vim-easy-align'
+
+" Any valid git URL is allowed
+Plug 'https://github.com/junegunn/vim-github-dashboard.git'
+
+"---plugins ----------------------------------------------------
+Plug 'autozimu/LanguageClient-neovim', {
+    \ 'tag': '*',
+    \ 'do': 'bash install.sh',
+    \ }
+Plug 'Yggdroot/indentLine'
+Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
+Plug 'zchee/deoplete-go', { 'do': 'make'}
+Plug 'fatih/vim-go',{'tag': '*'} 
+Plug 'Shougo/echodoc.vim'
+Plug 'Shougo/neco-syntax'
+Plug 'francoiscabrol/ranger.vim'
+Plug 'rbgrouleff/bclose.vim'
+Plug 'terryma/vim-multiple-cursors'
+"--color theme
+Plug 'drewtempelmeyer/palenight.vim'
+Plug 'NLKNguyen/papercolor-theme'
+Plug 'liuchengxu/space-vim-dark'
+"----------------------------------------------------------------
+""" discard---------------
+"Plug 'Shougo/denite.nvim'
+"Plug 'Shougo/neoinclude.vim'
+"Plug 'Shougo/neopairs.vim'
+"Plug 'mdempsky/gocode', { 'rtp': 'vim', 
+"    \'do': '~/.vim/plugged/gocode/vim/symlink.sh' }
+"Plug 'zchee/deoplete-jedi'
+"-------------------------
+" Initialize plugin system
+call plug#end()
+
+" A (not so) minimal vimrc.
+"
+
+" You want Vim, not vi. When Vim finds a vimrc, 'nocompatible' is set anyway.
+" We set it explicitely to make our position clear!
+set nocompatible
+
+filetype plugin indent on  " Load plugins according to detected filetype.
+syntax on                  " Enable syntax highlighting.
+
+set fileformat  =unix
+set autoindent             " Indent according to previous line.
+set expandtab              " Use spaces instead of tabs.
+set softtabstop =4         " Tab key indents by 4 spaces.
+set shiftwidth  =4         " >> indents by 4 spaces.
+set shiftround             " >> indents to next multiple of 'shiftwidth'.
+
+set backspace   =indent,eol,start  " Make backspace work as you would expect.
+set hidden                 " Switch between buffers without having to save first.
+set laststatus  =2         " Always show statusline.
+set display     =lastline  " Show as much as possible of the last line.
+
+set showmode               " Show current mode in command-line.
+set showcmd                " Show already typed keys when more are expected.
+
+set incsearch              " Highlight while searching with / or ?.
+set hlsearch               " Keep matches highlighted.
+
+set ttyfast                " Faster redrawing.
+set lazyredraw             " Only redraw when necessary.
+set modifiable
+set splitbelow             " Open new windows below the current window.
+set splitright             " Open new windows right of the current window.
+set signcolumn  =yes
+set cursorline             " Find the current line quickly.
+set wrapscan               " Searches wrap around end-of-file.
+set report      =0         " Always report changed lines.
+set synmaxcol   =200       " Only highlight the first 200 columns.
+set list                   " Show non-printable characters.
+set nu
+set colorcolumn=80
+set background=dark
+"set background=light
+"colorscheme murphy
+"colorscheme PaperColor
+"colorscheme gruvbox
+"colorscheme space-vim-dark 
+colorscheme palenight
+
+" Plugin settings ============================================================
+let g:indentLine_setColors = 0
+" deplolete
+let g:deoplete#enable_at_startup = 1
+call deoplete#custom#option('smart_case', v:true)
+call deoplete#custom#source('_',
+\ 'max_abbr_width', 40)
+call deoplete#custom#source('_',
+\ 'max_menu_width', 120)
+let g:deoplete#sources#jedi#python_path = "python3"
+"set completeopt-=preview
+"autocmd CompleteDone * silent! pclose!
+autocmd InsertLeave * silent! pclose!
+"" Disable deoplete when in multi cursor mode
+function! Multiple_cursors_before()
+    let b:deoplete_disable_auto_complete = 1
+endfunction
+function! Multiple_cursors_after()
+    let b:deoplete_disable_auto_complete = 0
+endfunction
+"-----------------------------------------------------------------------------
+" LSP
+let g:LanguageClient_rootMarkers = {
+        \ 'go': ['.git', 'go.mod'],
+        \ }
+let g:LanguageClient_serverCommands = {
+    \ 'python': ['pyls'],
+    \'shell': ['shellcheck'],
+    \'java':['/opt/jdt/jdtls.sh'],
+    \ }
+"    \ 'go': ['bingo', '--mode', 'stdio','--pprof', ':6060'],
+let g:LanguageClient_changeThrottle =1
+let g:LanguageClient_selectionUI    ='fzf'
+let LanguageClient_diagnosticsList  ='Location'
+let g:LanguageClient_hoverPreview   ='Always'
+"let g:LanguageClient_completionPreferTextEdit = 1
+"set completefunc=LanguageClient#complete
+set formatexpr                      =LanguageClient#textDocument_rangeFormatting_sync()
+
+set cmdheight                       =2
+let g:echodoc#enable_at_startup     =1
+let g:echodoc#type                  ='signature'
+" ------------------------------------------------------------------
+" deoplete-go settings
+let g:deoplete#sources#go#gocode_binary = $GOPATH.'/bin/gocode'
+let g:deoplete#sources#go#sort_class = ['package', 'func', 'type',
+                                    \'var', 'const']
+" ------------------------------------------------------------------
+" vim-go
+let g:go_highlight_build_constraints =1
+let g:go_highlight_extra_types       =1
+let g:go_highlight_fields            =1
+let g:go_highlight_functions         =1
+let g:go_highlight_methods           =1
+let g:go_highlight_trailing_whitespace_error = 1
+let g:go_highlight_operators =1
+let g:go_highlight_structs   =1
+let g:go_highlight_types     =1
+let g:go_highlight_string_spellcheck = 1
+let g:go_auto_sameids        =5
+let g:go_fmt_command ="goimports"
+let g:go_decls_mode = 'fzf'
+let g:go_decls_includes = 'func,type'
+let g:go_list_type = "locationlist"
+let g:go_auto_type_info =1 
+let g:go_list_autoclose = 1
+let g:go_term_mode = "vsplit"
+let g:go_term_enabled = 1
+" ---------------- Start of Denite config --------------------------
+" Denite
+" Change file/rec command.
+"call denite#custom#var('file/rec', 'command',
+"\ ['ag', '--follow', '--color', '--nogroup', '-g', ''])
+
+"call denite#custom#var('file/rec', 'command', ['scantree.py'])
+
+" Change mappings.
+"call denite#custom#map(
+"      \ 'insert',
+"      \ '<C-n>',
+"      \ '<denite:move_to_next_line>',
+"      \ 'noremap'
+"      \)
+"call denite#custom#map(
+"      \ 'insert',
+"      \ '<C-p>',
+"      \ '<denite:move_to_previous_line>',
+"      \ 'noremap'
+"      \)
+"" Ag command on grep source
+"call denite#custom#var('grep', 'command', ['ag'])
+"call denite#custom#var('grep', 'default_opts',
+"		\ ['-i', '--vimgrep'])
+"call denite#custom#var('grep', 'recursive_opts', [])
+"call denite#custom#var('grep', 'pattern_opt', [])
+"call denite#custom#var('grep', 'separator', ['--'])
+"call denite#custom#var('grep', 'final_opts', [])
+"
+"" Change ignore_globs
+"call denite#custom#filter('matcher/ignore_globs', 'ignore_globs',
+"      \ [ '.git/', '.ropeproject/', '__pycache__/','*.pyc',
+"      \   'venv/', 'images/', '*.min.*', 'img/', 'fonts/'])
+"" Add custom menus
+"let s:menus = {}
+"let s:menus.denite_menu = {
+"	\ 'description': 'Denite Menu'
+"	\ }
+"let s:menus.denite_menu.command_candidates = [
+"	\ ['file_rec', 'Denite file_rec'],
+"	\ ['file', 'Denite file'],
+"	\ ]
+"call denite#custom#var('menu', 'menus', s:menus)
+" ---------------- End of Denite config --------------------------
+" Ranger
+let g:ranger_map_keys = 0 "disable default key mapping
+let g:ranger_open_new_tab = 1
+let g:NERDTreeHijackNetrw = 0
+let g:ranger_replace_netrw = 1 " open ranger when vim open a directory
+" >>>>>>>>>>>>>>>  Key-binding <<<<<<<<<<<<<<
+" Global key mapping
+let mapleader = "`"
+nnoremap <leader>r :RangerCurrentFileNewTab<cr>
+nnoremap <leader>t :split term://bash<cr>
+" close location-list
+nnoremap <leader>lc :lcl<CR>
+" go next in location-list
+nnoremap <leader>ln :lne<CR>
+" go previous in location-list
+nnoremap <leader>lp :lp<CR>
+" close preview window
+nnoremap <space>pc :pc<CR>
+"nnoremap <space>df :Denite file_rec -winheight=10 <cr>
+"nnoremap <space>dl :Denite line -auto-preview<cr>
+"nnoremap <space>dm :Denite menu
+
+" LanguageClient
+function SetLSPShortcuts()
+    if has_key(g:LanguageClient_serverCommands, &filetype)
+        nnoremap <space>li :call LanguageClient_textDocument_implementation()<CR>
+        nnoremap <space>ld :call LanguageClient#textDocument_definition()<CR>
+        nnoremap <space>lr :call LanguageClient#textDocument_rename()<CR>
+        nnoremap <space>lf :call LanguageClient#textDocument_formatting()<CR>
+        nnoremap <space>lt :call LanguageClient#textDocument_typeDefinition()<CR>
+        nnoremap <space>lx :call LanguageClient#textDocument_references()<CR>
+        nnoremap <space>la :call LanguageClient_workspace_applyEdit()<CR>
+        nnoremap <space>lh :call LanguageClient#textDocument_hover()<CR>
+        nnoremap <space>ls :call LanguageClient_textDocument_documentSymbol()<CR>
+        nnoremap <space>lc :call LanguageClient_textDocument_codeAction()<CR>
+        nnoremap <space>lu :call *LanguageClient#textDocument_documentHighlight()<CR>
+        nnoremap <space>lm :call LanguageClient_contextMenu()<CR>
+    endif
+endfunction()
+
+autocmd FileType python,shell,java call SetLSPShortcuts()
+
+" go-vim 
+au FileType go nnoremap gr :GoRun<CR>
+au FileType go nnoremap gi :GoInfo<CR>
+au FileType go nnoremap gl :GoMetaLinter<CR>
+au FileType go nnoremap gr :GoReferrers<CR>
+au FileType go nnoremap gs :GoDefStack<CR>
+au FileType go nnoremap gc :GoErrCheck!<CR>
+au FileType go nnoremap gn :GoRename! 
+au FileType go nnoremap gD :GoDecls<CR>
+
+" Start interactive EasyAlign in visual mode (e.g. vip<Enter>)
+vmap <Enter> <Plug>(EasyAlign)
+"-----------------------------------------------------------------
+
+if has('multi_bytef') && &encoding ==# 'utf-8'
+  let &listchars = 'tab:▸ ,extends:❯,precedes:❮,nbsp:±'
+else
+  let &listchars = 'tab:> ,extends:>,precedes:<,nbsp:.'
+endif
+
+" The fish shell is not very compatible to other shells and unexpectedly
+" breaks things that use 'shell'.
+if &shell =~# 'fish$'
+  set shell=/bin/bash
+endif
+
+" Put all temporary files under the same directory.
+" https://github.com/mhinz/vim-galore#handling-backup-swap-undo-and-viminfo-files
+set backup
+set backupdir   =$HOME/tmp/vim/files/backup/
+set backupext   =-vimbackup
+set backupskip  =
+set noswapfile
+set directory   =$HOME/tmp/vim/files/swap/
+set updatecount =100
+set undofile
+set undodir     =$HOME/tmp/vim/files/undo/
+"set viminfo     ='100,n~/tmp/vim/files/info/viminfo
+
