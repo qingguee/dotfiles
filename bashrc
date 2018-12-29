@@ -145,5 +145,16 @@ ex ()
 # better yaourt colors
 export YAOURT_COLORS="nb=1:pkg=1:ver=1;32:lver=1;45:installed=1;42:grp=1;34:od=1;41;5:votes=1;44:dsc=0:other=1;35"
 
+# go path
+export GOPATH=~/go
+export PATH=$PATH:~/go/bin
+
 # K8s config
 export KUBECONFIG=~/.kube/config
+export PATH=$PATH:/usr/local/go/bin
+#. /usr/local/lib/python3.5/dist-packages/powerline/bindings/bash/powerline.sh
+export PATH="/home/elluffn/.pyenv/bin:$PATH"
+eval "$(pyenv init -)"
+eval "$(pyenv virtualenv-init -)"
+[ -f ~/.fzf.bash ] && source ~/.fzf.bash
+

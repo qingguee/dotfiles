@@ -1,0 +1,11 @@
+let g:netrw_dirhistmax  =10
+let g:netrw_dirhist_cnt =9
+let g:netrw_dirhist_1='/home/elluffn/.fzf'
+let g:netrw_dirhist_2='/home/elluffn/ws'
+let g:netrw_dirhist_3='/home/elluffn/ws/i3lock-color'
+let g:netrw_dirhist_4='/home/elluffn/ws/nef_ft/ftfw'
+let g:netrw_dirhist_5='/home/elluffn/ws/nef_ft/ftfw/client'
+let g:netrw_dirhist_6='/home/elluffn/ws'
+let g:netrw_dirhist_7='/home/elluffn/ws/go'
+let g:netrw_dirhist_8='/home/elluffn/ws/go/src'
+let g:netrw_dirhist_9='/home/elluffn/ws/go/src/goroutines'
