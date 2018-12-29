@@ -1,7 +1,4 @@
 {
-  "bip":"170,17.0.0/16",
-  "default-gateway": "172.17.0.1"
   "storage-driver": "overlay2",
-  "dns": ["150.236.34.180","147.128.68.204","8.8.8.8"],
-  "dns-search": ["sh.cn.ao.ericsson.se"]
+  "dns": ["8.8.8.8"]
 }
